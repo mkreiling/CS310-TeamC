@@ -37,7 +37,7 @@ public class Punch {
     }
 
     public Punch(Badge b, int terminalID, int punchTypeID){
-        this(-1, terminalID, b.getBadgeid(), new Timestamp(new GregorianCalendar().getTimeInMillis()), punchTypeID);
+        this(-1, terminalID, b.getId(), new Timestamp(new GregorianCalendar().getTimeInMillis()), punchTypeID);
     }
     
     public String printOriginalTimestamp() {
