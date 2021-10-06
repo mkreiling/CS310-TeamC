@@ -21,7 +21,7 @@ public static void main(String args[]){
         }
    
 }
-    catch(Exception e){System.out.println(e);
+    catch(Exception e){System.out.println(e); //you'll know if you mess up from this
 }
 }
 }
