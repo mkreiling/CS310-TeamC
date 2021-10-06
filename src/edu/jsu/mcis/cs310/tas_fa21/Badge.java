@@ -1,3 +1,10 @@
+//Team C Project Authors
+//Matthew Kreiling
+//Daniel Edberg
+//Jacob Davis
+//Tajuddin Idrisa Mwijage
+//Stephen Littlefield
+
 package edu.jsu.mcis.cs310.tas_fa21;
 
 public class Badge {
