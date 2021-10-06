@@ -25,7 +25,7 @@ import java.util.GregorianCalendar;
  * @author user
  */
 public class Punch {
-     private String badgeID;
+    private String badgeID;
     private int terminalID;
     private int punchTypeID;
     private int id;
@@ -44,7 +44,7 @@ public class Punch {
     }
 
     public Punch(Badge b, int terminalID, int punchTypeID){
-        this(-1, terminalID, b.getId(), new Timestamp(new GregorianCalendar().getTimeInMillis()), punchTypeID);
+        this(-1, terminalID, b.getID(), new Timestamp(new GregorianCalendar().getTimeInMillis()), punchTypeID);
     }
     
     public String printOriginalTimestamp() {

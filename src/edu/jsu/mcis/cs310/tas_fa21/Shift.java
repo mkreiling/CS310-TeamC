@@ -15,6 +15,7 @@ public class Shift {
     private int id, gracePeriod, dock, interval, lunchDeduct;
     private Time shiftBegin, lunchBegin, lunchEnd, shiftEnd;
     private final String description;
+    
     public Shift(int id, int interval, Time begin, int gracePeriod, int dock, Time lunchBegin, int lunchDeduct, Time lunchEnd, Time end, String description)
     {
         this.id = id;
