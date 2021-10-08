@@ -7,6 +7,13 @@
 
 package edu.jsu.mcis.cs310.tas_fa21;
 import java.sql.*;
+//additional imports, once this class is done, delete unused, added these to help clear possible errors.
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.logging.*;
+import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+
 
 //This will be the file we'll be using to connect to the Database. I'll go ahead and get it started just so we can have it -Jacob "Sandy" Davis
 public class TASDatabase {
@@ -42,6 +49,7 @@ public class TASDatabase {
             System.out.println("SQLState: " + e.getSQLState());
             System.out.println("VendorError: " + e.getErrorCode()); 
         }
+        
     }
 }
 
