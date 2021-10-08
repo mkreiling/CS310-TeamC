@@ -29,6 +29,10 @@ public class Shift {
         this.shiftEnd = end;
         this.description = description;
     }
+
+    Shift(int Id, int interval, int graceperiod, int dock, int lunchdeduct, String des, Time begin, Time end, Time lunchbegin, Time lunchend) {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
     //gets
     public int getId()
     {
