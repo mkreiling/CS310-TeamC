@@ -60,15 +60,15 @@ public class TASDatabase {
             try (Statement st = conn.createStatement()){
                 ResultSet rs = st.executeQuery(query);
                 while (rs.next()){
-                    int Id = rs.getInt("terminalID");
+                    int terminalID = rs.getInt("terminalID");
                     String badgeId = rs.getString("badgeid");
                     int punchTypeId = rs.getInt("punchtypeid");
                     Badge bdg = getBadge(badgeId);
                     long time = rs.getLong("ts");
                     pnch.setId(Id);
                     pnch.setBadgeID(badgeId);
-                    pnch.setTerminalID(TerminalID);
-                    pnch.setPunchTypeID(punchTypeId);
+                    pnch.setTerminalID(terminalID);
+                    pnch.setPunchTypeID(PunchType..values()[punchTypeId]);
                     GregorianCalendar origTime = new GregorianCalendar();
                     origTime.setTimeInMillis(time);
                     pnch.setOriginalTimeStamp(originalTimeStamp);

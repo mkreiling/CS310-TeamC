@@ -8,11 +8,9 @@
 package edu.jsu.mcis.cs310.tas_fa21;
 
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.GregorianCalendar;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -27,13 +25,13 @@ import java.util.GregorianCalendar;
 public class Punch {
     private String badgeID;
     private int terminalID;
-    private int punchTypeID;
+    private PunchType punchTypeID;
     private int id;
-    private Timestamp originalTimeStamp;
-    private Timestamp adjustedTimeStamp;
+    private LocalDateTime originalTimeStamp;
+    private LocalDateTime adjustedTimeStamp;
     private String adjustMessage;
     
-    public Punch (int id, int terminalID, String badgeID, Timestamp originalTimeStamp, int punchTypeID) {
+    public Punch (int id, int terminalID, String badgeID, LocalDateTime originalTimeStamp, PunchType punchTypeID) {
         
         if(id >= 0){this.id = id;}
         this.terminalID = terminalID;
@@ -43,32 +41,16 @@ public class Punch {
         
     }
 
-    public Punch(Badge b, int terminalID, int punchTypeID){
-        this(-1, terminalID, b.getID(), new Timestamp(new GregorianCalendar().getTimeInMillis()), punchTypeID);
+    public Punch(Badge b, int terminalID, PunchType punchTypeID){
+        this(-1, terminalID, b.getID(), LocalDateTime.now(), punchTypeID);
     }
     
     public String printOriginalTimestamp() {
         
         String punchResults = "";
-        GregorianCalendar cal = new GregorianCalendar();
+        LocalDateTime cal = new LocalDateTime();
         cal.setTimeInMillis(originalTimeStamp.getTime());
-        
-        switch(this.punchTypeID){
-            case 0:
-                punchResults = "CLOCK OUT:";
-                break;
-            case 1:
-                punchResults = "CLOCK IN:";
-                break;
-            case 2:
-                punchResults = "TIME OUT:";
-                break;
-            default:
-                System.out.println("ERROR");
-        }   
-        
-     
-        
+
         String pattern = "EEE MM/dd/yyyy HH:mm:ss";
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         String formattedDate = sdf.format(cal.getTime()).toUpperCase();
@@ -81,21 +63,9 @@ public class Punch {
     
     public String printAdjustedTimestamp() {
         String punchResults = "";
-        GregorianCalendar cal = new GregorianCalendar();
+        LocalDateTime cal = new LocalDateTime.();
         cal.setTimeInMillis(adjustedTimeStamp.getTime());
-        
-        switch(this.punchTypeID){
-            case 0:
-                punchResults = "CLOCK OUT:";
-                break;
-            case 1:
-                punchResults = "CLOCK IN:";
-                break;
-            case 2:
-                punchResults = "TIME OUT:";
-                break;
-          
-        }   
+
         
         String pattern = "EEE MM/dd/yyyy HH:mm:ss";
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
@@ -114,7 +84,7 @@ public class Punch {
         return terminalID;
     }
 
-    public int getPunchtypeid() {
+    public PunchType getPunchtypeid() {
         return punchTypeID;
     }
 
@@ -148,7 +118,7 @@ public class Punch {
         this.terminalID = terminalID;
     }
 
-    public void setPunchTypeID(int punchTypeID) {
+    public void setPunchTypeID(PunchType punchTypeID) {
         this.punchTypeID = punchTypeID;
     }
 
