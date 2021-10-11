@@ -68,6 +68,7 @@ public class TASDatabase {
                     pnch.setId(Id);
                     pnch.setBadgeID(badgeId);
                     pnch.setTerminalID(terminalID);
+                    //V Fix this in accordance with punch V
                     pnch.setPunchTypeID(PunchType..values()[punchTypeId]);
                     GregorianCalendar origTime = new GregorianCalendar();
                     origTime.setTimeInMillis(time);

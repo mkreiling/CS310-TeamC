@@ -48,6 +48,7 @@ public class Punch {
     public String printOriginalTimestamp() {
         
         String punchResults = "";
+        //V Fix me V
         LocalDateTime cal = new LocalDateTime();
         cal.setTimeInMillis(originalTimeStamp.getTime());
 
@@ -130,10 +131,12 @@ public class Punch {
         this.originalTimeStamp = originalTimeStamp;
     }
     
+    //V Fix Me V
     private Timestamp helperMethod1(LocalDateTime punch, int totalminutes) {
         punch = punch.withHour(totalminutes/60);
         punch = punch.withMinute(totalminutes%60);
         punch = punch.withSecond(0);
+        //V Fix Me V
         Timestamp t = Timestamp.valueOf(punch);
         
         return t;
@@ -143,6 +146,7 @@ public class Punch {
         punch = punch.withHour(time.getHour());
         punch = punch.withMinute(time.getMinute());
         punch = punch.withSecond(0);
+        //V Fix Me V
         Timestamp t = Timestamp.valueOf(punch);
         
         return t;
