@@ -8,9 +8,11 @@
 package edu.jsu.mcis.cs310.tas_fa21;
 
 
+import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.GregorianCalendar;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -20,65 +22,39 @@ import java.time.LocalTime;
 
 /**
  *
- * @author user
+ * @TeamC
  */
 public class Punch {
-    private String badgeID;
+    private int badgeID;
     private int terminalID;
+    private Badge badge;
     private PunchType punchTypeID;
     private int id;
     private LocalDateTime originalTimeStamp;
     private LocalDateTime adjustedTimeStamp;
     private String adjustMessage;
+    private Timestamp LocalDateTime;
     
-    public Punch (int id, int terminalID, String badgeID, LocalDateTime originalTimeStamp, PunchType punchTypeID) {
+    public Punch (int id, int terminalID, Badge badge, LocalDateTime originalTimeStamp, PunchType punchTypeID) {
         
         if(id >= 0){this.id = id;}
         this.terminalID = terminalID;
-        this.badgeID = badgeID;
+        this.badge = badge;
         this.originalTimeStamp = originalTimeStamp;
         this.punchTypeID = punchTypeID;
         
     }
 
-    public Punch(Badge b, int terminalID, PunchType punchTypeID){
-        this(-1, terminalID, b.getID(), LocalDateTime.now(), punchTypeID);
+    public Punch(Badge badge, int terminalID, PunchType punchTypeID, LocalDateTime originalTimeStamp){
+        this.terminalID=terminalID;
+       this.badge= badge;
+       this.originalTimeStamp = originalTimeStamp;
+       this.punchTypeID=punchTypeID;
     }
     
-    public String printOriginalTimestamp() {
-        
-        String punchResults = "";
-        //V Fix me V
-        LocalDateTime cal = new LocalDateTime();
-        cal.setTimeInMillis(originalTimeStamp.getTime());
-
-        String pattern = "EEE MM/dd/yyyy HH:mm:ss";
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-        String formattedDate = sdf.format(cal.getTime()).toUpperCase();
-        
-        String originalTimestamptoString = "#" + getBadgeid() + " " + punchResults + " " + formattedDate;
-            
-        return originalTimestamptoString;
-         
-    }
-    
-    public String printAdjustedTimestamp() {
-        String punchResults = "";
-        LocalDateTime cal = new LocalDateTime.();
-        cal.setTimeInMillis(adjustedTimeStamp.getTime());
-
-        
-        String pattern = "EEE MM/dd/yyyy HH:mm:ss";
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-        String formattedDate = sdf.format(cal.getTime()).toUpperCase();
-
-        String originalTimestamptoString = "#" + getBadgeid() + " " + punchResults + " " + formattedDate + " (" + adjustMessage + ")";
-            
-        return originalTimestamptoString;
-    }
-        
-    public String getBadgeid() {
-        return badgeID;
+   
+    public Badge getBadgeid() {
+        return badge;
     }
 
     public int getTerminalid() {
@@ -92,27 +68,22 @@ public class Punch {
     public int getId() {
         return id;
     }
-
-    public long getOriginaltimestamp() {
-        return originalTimeStamp.getTime();
-
-    }
     
-    public String getAdjustMessage(){
-        return adjustMessage;
-
-    }
+  
     
-    public Timestamp getOriginaltimestamp2() {
+    public LocalDateTime getOriginalTimestamp() {
         return originalTimeStamp;
     }
     
-    public Timestamp getAdjustedTimeStamp() {
+    public LocalDateTime getAdjustedTimeStamp() {
         return adjustedTimeStamp;
     }
+        public void setOriginalTimeStamp(Timestamp originalTimeStamp) {
+        this.LocalDateTime = originalTimeStamp;
+    }
     
-    public void setBadgeID(String badgeID) {
-        this.badgeID = badgeID;
+    public void setBadgeID(Badge badgeID) {
+        this.badge = badgeID;
     }
 
     public void setTerminalID(int terminalID) {
@@ -127,41 +98,9 @@ public class Punch {
         this.id = id;
     }
 
-    public void setOriginalTimeStamp(Timestamp originalTimeStamp) {
-        this.originalTimeStamp = originalTimeStamp;
+    
+    public String printOriginal(){
+        return "#" + badgeID + " " + punchTypeID + ": " + originalTimeStamp;
     }
     
-    //V Fix Me V
-    private Timestamp helperMethod1(LocalDateTime punch, int totalminutes) {
-        punch = punch.withHour(totalminutes/60);
-        punch = punch.withMinute(totalminutes%60);
-        punch = punch.withSecond(0);
-        //V Fix Me V
-        Timestamp t = Timestamp.valueOf(punch);
-        
-        return t;
-    }
-    
-    private Timestamp helperMethod2(LocalDateTime punch, LocalTime time) {
-        punch = punch.withHour(time.getHour());
-        punch = punch.withMinute(time.getMinute());
-        punch = punch.withSecond(0);
-        //V Fix Me V
-        Timestamp t = Timestamp.valueOf(punch);
-        
-        return t;
-    }
-
-    Object printOriginal() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
-    
-
-    /**
-     *
-     * @param s a Shift that represents the shift that should be adjusted
-     */
-  
 }

@@ -18,6 +18,7 @@ import java.time.LocalTime;
 
 
 //This will be the file we'll be using to connect to the Database. I'll go ahead and get it started just so we can have it -Jacob "Sandy" Davis
+
 public class TASDatabase {
     private Connection conn;
     private ResultSet result;
@@ -67,12 +68,12 @@ public class TASDatabase {
                     int punchTypeId = rs.getInt("punchtypeid");
                     Badge bdg = getBadge(badgeId);
                     long time = rs.getLong("ts");
-                    pnch.setId(Id);
+                    pnch.setId(id);
                     pnch.setBadgeID(badgeId);
                     pnch.setTerminalID(terminalID);
                     //V Fix this in accordance with punch V
-                    pnch.setPunchTypeID(PunchType..values()[punchTypeId]);
-                    GregorianCalendar origTime = new GregorianCalendar();
+                    pnch.setPunchTypeID(PunchType.values()[punchTypeId]);
+                    LocalDateTime = new LocalDateTime();
                     origTime.setTimeInMillis(time);
                     pnch.setOriginalTimeStamp(originalTimeStamp);
                 }
@@ -157,8 +158,8 @@ public class TASDatabase {
     public int insertpunch(Punch pnch){
         int ID = pnch.getId();
 	int terminalID = pnch.getTerminalid();
-	int punchTypeID = pnch.getPunchtypeid();
-        GregorianCalendar cal = pnch.getoriginaltime();
+	int punchTypeId = pnch.getPunchtypeid();
+        GregorianCalendar cal = pnch.LocalDateTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         java.sql.Date date = new java.sql.Date(cal.getTimeInMillis());
 	String badgeID = pnch.getBadgeid();
@@ -167,7 +168,7 @@ public class TASDatabase {
             int Results;
             ResultSet rst;		
             
-            String query = " insert into punch (id, terminalid, badgeid, originaltimestamp, punchtypeid) VALUES (?, ?, ?, ?, ?)";
+            String query = " insert into punch (id, terminalid, badgeid, originalTimeStamp, punchtypeid) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement pstUpdate = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             pstUpdate.setInt(1, ID);
             pstUpdate.setInt(2, terminalID);
@@ -219,3 +220,5 @@ public class TASDatabase {
         return punchList;
     }    
 }
+
+
