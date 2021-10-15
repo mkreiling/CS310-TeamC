@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.*;
 
 
 //This will be the file we'll be using to connect to the Database. I'll go ahead and get it started just so we can have it -Jacob "Sandy" Davis
@@ -23,6 +24,10 @@ public class TASDatabase {
     private Connection conn;
     private ResultSet result;
     public Statement sm;
+    public java.security.Timestamp LocalDateTime;
+    public LocalDateTime originalTimeStamp;
+    public LocalDateTime adjustedTimeStamp;
+    private Badge badge;
     
 //This is just a rudamentary connection to the database. I also added to the main project MySQL library because NetBeans hates me and would not connect otherwise.
     public void main(String args[]){
@@ -64,18 +69,21 @@ public class TASDatabase {
                 ResultSet rs = st.executeQuery(query);
                 while (rs.next()){
                     int terminalID = rs.getInt("terminalID");
-                    String badgeId = rs.getString("badgeid");
+                    String badgeID = rs.getString("badgeid");
                     int punchTypeId = rs.getInt("punchtypeid");
-                    Badge bdg = getBadge(badgeId);
+                    Badge bdg = getBadge(badgeID);
                     long time = rs.getLong("ts");
                     pnch.setId(id);
-                    pnch.setBadgeID(badgeId);
+                    pnch.setBadgeID(badgeID);
                     pnch.setTerminalID(terminalID);
                     //V Fix this in accordance with punch V
                     pnch.setPunchTypeID(PunchType.values()[punchTypeId]);
-                    LocalDateTime = new LocalDateTime();
-                    origTime.setTimeInMillis(time);
-                    pnch.setOriginalTimeStamp(originalTimeStamp);
+                    Calendar.getInstance();
+                    //LocalDateTime origTime; //edited out, may still be useful
+                    LocalTime origTime = LocalTime.getInstance;
+                    //origTime = new originalTimeStamp(); //edited out, may still be useful
+                    origTime.setTimeInMillis(Time);//'Time' is a placeholder-- Need to replace with # of milliseconds
+                    pnch.setOriginalTimeStamp(origTime);
                 }
             }
         }
@@ -158,17 +166,17 @@ public class TASDatabase {
     public int insertpunch(Punch pnch){
         int ID = pnch.getId();
 	int terminalID = pnch.getTerminalid();
-	int punchTypeId = pnch.getPunchtypeid();
-        GregorianCalendar cal = pnch.LocalDateTime();
+	PunchType punchTypeID = pnch.getPunchtypeid();
+        LocalDateTime origTime = pnch.LocalDateTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        java.sql.Date date = new java.sql.Date(cal.getTimeInMillis());
-	String badgeID = pnch.getBadgeid();
+        java.sql.Date date = new java.sql.Date(origTime.getTimeInMillis(time));//'time' is a placeholder
+	Badge badgeID = pnch.getBadgeid();
         try{
             int punchID;
             int Results;
             ResultSet rst;		
             
-            String query = " insert into punch (id, terminalid, badgeid, originalTimeStamp, punchtypeid) VALUES (?, ?, ?, ?, ?)";
+            String query = " insert into punch (id, terminalid, badgeid, originalTimeStamp, punchTypeID) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement pstUpdate = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             pstUpdate.setInt(1, ID);
             pstUpdate.setInt(2, terminalID);
