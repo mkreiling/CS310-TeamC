@@ -176,13 +176,13 @@ public class TASDatabase {
             int Results;
             ResultSet rst;		
             
-            String query = " insert into punch (id, terminalid, badgeid, originalTimeStamp, punchTypeID) VALUES (?, ?, ?, ?, ?)";
+            String query = " insert into punch (id, terminalid, badgeID, originalTimeStamp, punchTypeID) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement pstUpdate = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             pstUpdate.setInt(1, ID);
             pstUpdate.setInt(2, terminalID);
-            pstUpdate.setString(3, badgeID);
+            pstUpdate.setBadgeID(3, badgeID);
             pstUpdate.setString(4, sdf.format(date));
-            pstUpdate.setInt(5, punchTypeID);     
+            pstUpdate.setPunchTypeID(5, punchTypeID);     
             Results = pstUpdate.executeUpdate();
             if(Results == 1){
                 rst = pstUpdate.getGeneratedKeys();
