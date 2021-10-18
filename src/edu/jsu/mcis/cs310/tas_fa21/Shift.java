@@ -33,6 +33,10 @@ public class Shift {
     Shift(int Id, int interval, int graceperiod, int dock, int lunchdeduct, String des, Time begin, Time end, Time lunchbegin, Time lunchend) {
         throw new UnsupportedOperationException("Not supported yet."); 
     }
+
+    Shift(int idNum) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     //gets
     public int getId()
     {

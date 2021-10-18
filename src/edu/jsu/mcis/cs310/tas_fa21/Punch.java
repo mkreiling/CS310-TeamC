@@ -25,7 +25,7 @@ import java.util.GregorianCalendar;
  * @TeamC
  */
 public class Punch {
-    private int badgeID;
+    private int BadgeID;
     private int terminalID;
     private Badge badge;
     private PunchType punchTypeID;
@@ -100,7 +100,9 @@ public class Punch {
 
     
     public String printOriginal(){
-        return "#" + badgeID + " " + punchTypeID + ": " + originalTimeStamp;
+        return "#" + BadgeID + " " + punchTypeID + ": " + originalTimeStamp;
     }
+
+   
     
 }
