@@ -30,8 +30,8 @@ public class TASDatabase {
             /* Identifying the Server */
         
             String server = ("jdbc:mysql://localhost/tas_fa21_v1?serverTimezone=America/Chicago");
-            String username = "tasuser";
-            String password = "teame";
+            String username = "root";
+            String password = "CS488";
             System.out.println("Connecting to " + server + "...");
 
             /* Load the MySQL JDBC Driver */
@@ -123,6 +123,8 @@ public class TASDatabase {
                 int terminalid = resultset.getInt("terminalid");
                 String badgeid = resultset.getString("badgeid");
                 Badge badge = getBadge(badgeid);
+                LocalDateTime originalTimeStamp = resultset.getTimestamp("originalTimeStamp").toLocalDateTime();
+                //PunchType punchTypeID = resultset.getpunchTypeID("punchTypeID");
                 
                 java.time.LocalDateTime originaltimestamp = resultset.getTimestamp("originaltimestamp").toLocalDateTime();
 
@@ -130,7 +132,7 @@ public class TASDatabase {
 
                 //Punch(int id, int terminalid, Badge badge, int punchtypeid, Timestamp originaltimestamp
               // punch = new Punch(id, terminalid, badge, punchtype, originaltimestamp);
-               Punch =new punch(id,terminalID, badge, originalTimeStamp, punchTypeID);
+               Punch p = new Punch(id, terminalid, badge, originalTimeStamp, punchtype);
             }
             
         }
