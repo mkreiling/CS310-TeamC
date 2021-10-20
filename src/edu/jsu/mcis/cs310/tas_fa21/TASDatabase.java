@@ -29,7 +29,7 @@ public class TASDatabase {
 
             /* Identifying the Server */
         
-            String server = ("jdbc:mysql://localhost/tas_fa21_v1?serverTimezone=America/Chicago");
+            String server = ("jdbc:mysql://localhost/tas_fa21/TAS.java");
             String username = "root";
             String password = "CS488";
             System.out.println("Connecting to " + server + "...");
@@ -169,7 +169,7 @@ public class TASDatabase {
         return null;
     }
     
-    public Shift getShift(Badge badge) {
+    public Shift getShift(Badge badge) {//need to change (Badge badge) but to what????????
         
         Shift shift = null;
         
