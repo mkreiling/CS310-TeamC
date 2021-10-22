@@ -29,9 +29,9 @@ public class TASDatabase {
 
             /* Identifying the Server */
         
-            String server = ("jdbc:mysql://localhost/tas_fa21/TAS.java");
-            String username = "root";
-            String password = "CS488";
+            String server = ("jdbc:mysql://localhost/tas_fa21_v1?serverTimezone=America/Chicago");
+            String username = "CS310C";
+            String password = "cs488";
             System.out.println("Connecting to " + server + "...");
 
             /* Load the MySQL JDBC Driver */
@@ -124,14 +124,13 @@ public class TASDatabase {
                 String badgeid = resultset.getString("badgeid");
                 Badge badge = getBadge(badgeid);
                 LocalDateTime originalTimeStamp = resultset.getTimestamp("originalTimeStamp").toLocalDateTime();
-                //PunchType punchTypeID = resultset.getpunchTypeID("punchTypeID");
+
                 
                 java.time.LocalDateTime originaltimestamp = resultset.getTimestamp("originaltimestamp").toLocalDateTime();
 
                 PunchType punchtype = PunchType.values()[resultset.getInt("punchtypeid")];
 
-                //Punch(int id, int terminalid, Badge badge, int punchtypeid, Timestamp originaltimestamp
-              // punch = new Punch(id, terminalid, badge, punchtype, originaltimestamp);
+               
                Punch p = new Punch(id, terminalid, badge, originalTimeStamp, punchtype);
             }
             
@@ -176,7 +175,7 @@ public class TASDatabase {
         try {
             pstSelect = conn.prepareStatement("select * from employee where id=1");
             
-            //pstSelect.setString(1, badge);
+            
             
             pstSelect.execute();
             resultset = pstSelect.getResultSet();
@@ -185,9 +184,33 @@ public class TASDatabase {
             //Results
             String idNum = resultset.getString(1);
             
-            //b = new Badge(idNum);
-            //int badgeId = badge.getId();
-            //return ;
+         
+        }
+        
+        catch(Exception e) {
+            System.err.println("** getShift: " + e.toString());
+        }
+        
+        return shift;
+        
+    }
+        public Shift getShift(int Badge) {
+        
+        Shift shift = null;
+        
+        try {
+            pstSelect = conn.prepareStatement("select * from employee where id=1");
+            
+            
+            
+            pstSelect.execute();
+            resultset = pstSelect.getResultSet();
+            resultset.first();
+            
+            //Results
+            String idNum = resultset.getString(1);
+            
+         
         }
         
         catch(Exception e) {
