@@ -5,6 +5,7 @@
 //Tajuddin Idrisa Mwijage
 //Stephen Littlefield
 
+
 package edu.jsu.mcis.cs310.tas_fa21;
 
 import java.sql.*;
@@ -168,7 +169,7 @@ public class TASDatabase {
         return null;
     }
     
-    public Shift getShift(Badge badge) {//need to change (Badge badge) but to what????????
+    public Shift getShift(Badge badge) {
         
         Shift shift = null;
         
@@ -220,36 +221,10 @@ public class TASDatabase {
         return shift;
         
     }
-
-    public Shift getShift(int badge) {//need to change (Badge badge) but to what????????
         
-        Shift shift = null;
-        
-        try {
-            pstSelect = conn.prepareStatement("select * from employee where id=1");
-            
-            //pstSelect.setString(1, badge);
-            
-            pstSelect.execute();
-            resultset = pstSelect.getResultSet();
-            resultset.first();
-            
-            //Results
-            String idNum = resultset.getString(1);
-            
-            //b = new Badge(idNum);
-            //int badgeId = badge.getId();
-            //return ;
-        }
-        
-        catch(Exception e) {
-            System.err.println("** getShift: " + e.toString());
-        }
-        
-        return shift;
-        
-    }
-    
 }
+
+
+
 
 
