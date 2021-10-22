@@ -197,7 +197,36 @@ public class TASDatabase {
         return shift;
         
     }
+
+    public Shift getShift(int badge) {//need to change (Badge badge) but to what????????
         
+        Shift shift = null;
+        
+        try {
+            pstSelect = conn.prepareStatement("select * from employee where id=1");
+            
+            //pstSelect.setString(1, badge);
+            
+            pstSelect.execute();
+            resultset = pstSelect.getResultSet();
+            resultset.first();
+            
+            //Results
+            String idNum = resultset.getString(1);
+            
+            //b = new Badge(idNum);
+            //int badgeId = badge.getId();
+            //return ;
+        }
+        
+        catch(Exception e) {
+            System.err.println("** getShift: " + e.toString());
+        }
+        
+        return shift;
+        
+    }
+    
 }
 
 
