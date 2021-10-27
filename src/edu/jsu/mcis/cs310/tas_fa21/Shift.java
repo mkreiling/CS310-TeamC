@@ -5,11 +5,14 @@
 //Tajuddin Idrisa Mwijage
 //Stephen Littlefield
 
+
+
 package edu.jsu.mcis.cs310.tas_fa21;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.sql.*;
+import java.time.LocalTime;
 public class Shift {
     //variables
     private int id, gracePeriod, dock, interval, lunchDeduct;
@@ -35,6 +38,10 @@ public class Shift {
     }
 
     Shift(int idNum) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    Shift(int shiftID, String description, LocalTime shiftStart, LocalTime shiftStop, int interval, int gracePeriod, int dock, LocalTime lunchStart, LocalTime lunchStop, int lunchDeduct) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //gets
@@ -110,4 +117,7 @@ public class Shift {
         return data;
     }
 }
+
+
+
 

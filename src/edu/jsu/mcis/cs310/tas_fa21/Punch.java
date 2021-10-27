@@ -5,6 +5,10 @@
 //Tajuddin Idrisa Mwijage
 //Stephen Littlefield
 
+
+
+
+
 package edu.jsu.mcis.cs310.tas_fa21;
 
 
@@ -18,7 +22,7 @@ import java.util.GregorianCalendar;
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
- */
+ 
 
 /**
  *
@@ -26,42 +30,57 @@ import java.util.GregorianCalendar;
  */
 public class Punch {
     private int BadgeID;
+    Badge badge;
     private int terminalID;
-    private Badge badge;
+    private String PunchType;
     private PunchType punchTypeID;
     private int id;
     private LocalDateTime originalTimeStamp;
     private LocalDateTime adjustedTimeStamp;
+    private String adjustmentype;
     private String adjustMessage;
     private Timestamp LocalDateTime;
     
     public Punch (int id, int terminalID, Badge badge, LocalDateTime originalTimeStamp, PunchType punchTypeID) {
-        
+        //Punch punch = new Punch(terminalid, getBadge(badgeid), punchtypeid, originaltimestamp);
         if(id >= 0){this.id = id;}
         this.terminalID = terminalID;
+        //this.BadgeID = badge.getID();
         this.badge = badge;
         this.originalTimeStamp = originalTimeStamp;
         this.punchTypeID = punchTypeID;
         
     }
 
-    public Punch(Badge badge, int terminalID, PunchType punchTypeID, LocalDateTime originalTimeStamp){
+    public Punch(int terminalID,Badge badge, PunchType punchTypeID, LocalDateTime originalTimeStamp){
         this.terminalID=terminalID;
        this.badge= badge;
        this.originalTimeStamp = originalTimeStamp;
        this.punchTypeID=punchTypeID;
+       
+
     }
+
+    Punch(int i, Badge badge, int i0) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.badge= badge;
+    }
+
     
+    public Badge getBadge() {
+        return badge;
+    }
    
     public Badge getBadgeid() {
-        return badge;
+        Badge badgeid = null;
+        return badgeid;
     }
 
     public int getTerminalid() {
         return terminalID;
     }
 
-    public PunchType getPunchtypeid() {
+    public PunchType getPunchtype() {
         return punchTypeID;
     }
 
@@ -71,7 +90,7 @@ public class Punch {
     
   
     
-    public LocalDateTime getOriginalTimestamp() {
+    public LocalDateTime getOriginaltimestamp() {
         return originalTimeStamp;
     }
     
@@ -106,3 +125,7 @@ public class Punch {
    
     
 }
+
+
+
+

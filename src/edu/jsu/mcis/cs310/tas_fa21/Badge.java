@@ -5,6 +5,11 @@
 //Tajuddin Idrisa Mwijage
 //Stephen Littlefield
 
+
+
+
+
+
 package edu.jsu.mcis.cs310.tas_fa21;
 
 public class Badge {
@@ -19,7 +24,7 @@ public class Badge {
     }
     
     //Getters for id number and name
-    public String getID() {
+    public String getId() {
         return BadgeID;
     }
 
@@ -36,3 +41,6 @@ public class Badge {
     }
     
 }
+
+
+
