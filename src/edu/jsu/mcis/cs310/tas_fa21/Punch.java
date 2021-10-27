@@ -16,6 +16,7 @@ import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.GregorianCalendar;
 
 /*
@@ -29,8 +30,8 @@ import java.util.GregorianCalendar;
  * @TeamC
  */
 public class Punch {
-    private int BadgeID;
-    Badge badge;
+
+    private Badge badge;
     private int terminalID;
     private String PunchType;
     private PunchType punchTypeID;
@@ -119,7 +120,19 @@ public class Punch {
 
     
     public String printOriginal(){
-        return "#" + BadgeID + " " + punchTypeID + ": " + originalTimeStamp;
+        
+        // #D2C39273 CLOCK IN: WED 09/05/2018 07:00:07
+        
+        StringBuilder s = new StringBuilder();
+        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
+        
+        s.append('#').append(badge.getId()).append(' ');
+        s.append(punchTypeID).append(": ").append(dtf.format(originalTimeStamp).toUpperCase());
+        
+        return (s.toString());
+        
+        
     }
 
    

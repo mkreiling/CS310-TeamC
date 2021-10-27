@@ -22,6 +22,7 @@ package edu.jsu.mcis.cs310.tas_fa21;
 import java.sql.*;
 import java.sql.Connection;
 import java.time.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 
@@ -29,10 +30,6 @@ import java.util.ArrayList;
 public class TASDatabase {
     
     Connection conn = null;
-    PreparedStatement pstSelect = null, pstUpdate = null;
-    private String query;
-    ResultSet resultset = null;
-    ResultSetMetaData metadata = null;
     
     boolean hasresults;
     int columnCount = 0;
@@ -45,12 +42,8 @@ public class TASDatabase {
         
             String server = ("jdbc:mysql://localhost/tas_fa21_v1?serverTimezone=America/Chicago");
             String username = "CS310C";
-            String password = "cs488";
+            String password = "CS488";
             System.out.println("Connecting to " + server + "...");
-
-            /* Load the MySQL JDBC Driver */
-        
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
         
             /* Open the Connection */
 
@@ -68,18 +61,6 @@ public class TASDatabase {
         catch (Exception e) {
             System.err.println(e.toString());
         }
-        
-        // Close Database Objects
-        
-        finally {
-            
-            if (resultset != null) { try { resultset.close(); resultset = null;} catch (Exception e ) {} }
-            
-            if (pstSelect != null) { try { pstSelect.close(); pstSelect = null;} catch (Exception e ) {} }
-            
-            if (pstUpdate != null) { try { pstUpdate.close(); pstUpdate = null;} catch (Exception e ) {} }
-            
-        }
     }
     
     public Badge getBadge(String badgeid){
@@ -88,7 +69,7 @@ public class TASDatabase {
         
         try{
             
-            pstSelect = conn.prepareStatement("SELECT * FROM badge where id = ?");
+            PreparedStatement pstSelect = conn.prepareStatement("SELECT * FROM badge where id = ?");
             
             pstSelect.setString(1, badgeid);
             
@@ -96,7 +77,7 @@ public class TASDatabase {
             
             if (hasresults) {
             
-                resultset = pstSelect.getResultSet();
+                ResultSet resultset = pstSelect.getResultSet();
                 resultset.first();
 
                 String id = resultset.getString("id");
@@ -121,7 +102,7 @@ public class TASDatabase {
         Punch punch = null;
         
         try {
-            pstSelect = conn.prepareStatement("select * from punch where id=?");
+            PreparedStatement pstSelect = conn.prepareStatement("select * from punch where id=?");
             pstSelect.setInt(1, punchid);
             
             boolean hasresult = pstSelect.execute();
@@ -130,22 +111,21 @@ public class TASDatabase {
                 
                 System.err.println("Getting punch data ...");
 
-                resultset = pstSelect.getResultSet();
+                ResultSet resultset = pstSelect.getResultSet();
 
                 resultset.first();
                 int id = resultset.getInt("id");
                 int terminalID = resultset.getInt("terminalid");
                 String badgeID = resultset.getString("badgeid");
                 Badge badge = getBadge(badgeID);
-                LocalDateTime originalTimeStamp = resultset.getTimestamp("originalTimeStamp").toLocalDateTime();
-
-                
-                originalTimeStamp = resultset.getTimestamp("originalTimeStamp").toLocalDateTime();
+                LocalDateTime originalTimeStamp = resultset.getTimestamp("originaltimestamp").toLocalDateTime();
 
                 PunchType punchtype = PunchType.values()[resultset.getInt("punchtypeid")];
 
-               
-               //Punch punch = new Punch(id, terminalID, badge, originalTimeStamp, punchtype);
+
+                //  Punch (int id, int terminalID, Badge badge, LocalDateTime originalTimeStamp, PunchType punchTypeID)
+                punch = new Punch(id, terminalID, badge, originalTimeStamp, punchtype);
+                
             }
             
         }
@@ -158,28 +138,34 @@ public class TASDatabase {
     }
     
     
-    public Shift getShift(String shiftID) {
+    public Shift getShift(int shiftID) {
+        
+        Shift shift = null;
+        
         try {
-            pstSelect = conn.prepareStatement("select * from employee where id=7");
+            PreparedStatement pstSelect = conn.prepareStatement("select * from shift where id = ?");
             
-            pstSelect.setString(1, shiftID);
+            pstSelect.setInt(1, shiftID);
             
             pstSelect.execute();
-            resultset = pstSelect.getResultSet();
+            
+            ResultSet resultset = pstSelect.getResultSet();
             resultset.first();
             
             //Results
-            int idNum = resultset.getInt(7);
+            int idNum = resultset.getInt("id");
+            LocalTime start = resultset.getTime("start").toLocalTime();
+            // continue for all the other fields in the "Shift" table
             
-            Shift shift = new Shift(idNum);
-   
-            return shift;
+            //shift = new Shift(idNum);
         }
         
         catch(Exception e) {
             System.err.println("** getShift: " + e.toString());
         }
-        return null;
+        
+        return shift;
+        
     }
     
     public Shift getShift(Badge badge) {
@@ -187,38 +173,12 @@ public class TASDatabase {
         Shift shift = null;
         
         try {
-            pstSelect = conn.prepareStatement("select * from employee where id=1");
+            PreparedStatement pstSelect = conn.prepareStatement("select * from employee where id=1");
             
             
             
             pstSelect.execute();
-            resultset = pstSelect.getResultSet();
-            resultset.first();
-            
-            //Results
-            String idNum = resultset.getString(1);
-            
-         
-        }
-        
-        catch(Exception e) {
-            System.err.println("** getShift: " + e.toString());
-        }
-        
-        return shift;
-        
-    }
-        public Shift getShift(int Badge) {
-        
-        Shift shift = null;
-        
-        try {
-            pstSelect = conn.prepareStatement("select * from employee where id=1");
-            
-            
-            
-            pstSelect.execute();
-            resultset = pstSelect.getResultSet();
+            ResultSet resultset = pstSelect.getResultSet();
             resultset.first();
             
             //Results
@@ -235,8 +195,43 @@ public class TASDatabase {
         
     }
 
-    int insertPunch(Punch p1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+   
+        public int insertPunch(Punch p){
+            
+            int results = 0;
+            
+            
+           
+            LocalDateTime time = p.getOriginaltimestamp();
+          
+            String badgeid = p.getBadge().getId(); 
+            int terminalid = p.getTerminalid(); 
+            PunchType punchtypeid = p.getPunchtype(); 
+          
+
+         try{
+             String query = "INSERT INTO tas_fa21_v1.punch (terminalid, badgeid, originaltimestamp, punchtypeid) VALUES (?, ?, ?, ?)"; 
+             PreparedStatement pstUpdate = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS); 
+             
+             pstUpdate.setInt(1, terminalid);
+             pstUpdate.setString(2, badgeid);
+             pstUpdate.setTimestamp(3, java.sql.Timestamp.valueOf(time)); // this is now a set to timestamp instead of a string
+             pstUpdate.setInt(4, punchtypeid.ordinal());
+             
+             int updateCount = pstUpdate.executeUpdate();
+             
+             if(updateCount > 0){
+                 
+                 ResultSet resultset = pstUpdate.getGeneratedKeys(); 
+                 
+                 if (resultset.next()){
+                     results = resultset.getInt(1);
+                 }
+             }
+                
+         }
+         catch(Exception e){ e.printStackTrace();} // changed these to output differently and just print the full stack
+         return results;    
     }
 
     public ArrayList<Punch> getDailyPunchList(Badge badge, LocalDate date) {
@@ -244,8 +239,8 @@ public class TASDatabase {
        ArrayList<Punch> alist = null;
         
         try {
-            query = "SELECT * FROM punch WHERE badgeid=? AND DATE(originalTimeStamp)=?";
-            pstSelect = conn.prepareStatement(query);
+            String query = "SELECT * FROM punch WHERE badgeid=? AND DATE(originalTimeStamp)=?";
+            PreparedStatement pstSelect = conn.prepareStatement(query);
             pstSelect.setString(1, badge.getId());
             pstSelect.setDate(2, java.sql.Date.valueOf(date));
             
@@ -258,12 +253,15 @@ public class TASDatabase {
                 
                 ResultSet resultsSet = pstSelect.getResultSet();
                 while(resultsSet.next()) {
+                    int id = resultsSet.getInt("id");
                     int terminalID = resultsSet.getInt("terminalid");
                     String badgeID = resultsSet.getString("badgeid");
                     LocalDateTime originalTimeStamp = resultsSet.getTimestamp("originalTimeStamp").toLocalDateTime();
-                    int PunchTypeID = resultsSet.getInt("punchTypeId");
+                    int punchTypeID = resultsSet.getInt("punchTypeId");
+                    
+                    //  Punch (int id, int terminalID, Badge badge, LocalDateTime originalTimeStamp, PunchType punchTypeID)
                    
-                    Punch punch = new punch (terminalID, badge, originalTimeStamp, PunchTypeID);
+                    Punch punch = new Punch (id, terminalID, getBadge(badgeID), originalTimeStamp, PunchType.values()[punchTypeID]);
                     alist.add(punch);
                     
                 }
@@ -275,6 +273,8 @@ public class TASDatabase {
         return alist;   
         
     }
+
+   
 
     
         

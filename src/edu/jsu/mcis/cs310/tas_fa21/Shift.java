@@ -11,15 +11,17 @@ package edu.jsu.mcis.cs310.tas_fa21;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
-import java.sql.*;
 import java.time.LocalTime;
+
 public class Shift {
+    
     //variables
+    
     private int id, gracePeriod, dock, interval, lunchDeduct;
-    private Time shiftBegin, lunchBegin, lunchEnd, shiftEnd;
+    private LocalTime shiftBegin, lunchBegin, lunchEnd, shiftEnd;
     private final String description;
     
-    public Shift(int id, int interval, Time begin, int gracePeriod, int dock, Time lunchBegin, int lunchDeduct, Time lunchEnd, Time end, String description)
+    public Shift(int id, int interval, LocalTime begin, int gracePeriod, int dock, LocalTime lunchBegin, int lunchDeduct, LocalTime lunchEnd, LocalTime end, String description)
     {
         this.id = id;
         this.interval = interval;
@@ -32,18 +34,7 @@ public class Shift {
         this.shiftEnd = end;
         this.description = description;
     }
-
-    Shift(int Id, int interval, int graceperiod, int dock, int lunchdeduct, String des, Time begin, Time end, Time lunchbegin, Time lunchend) {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    Shift(int idNum) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    Shift(int shiftID, String description, LocalTime shiftStart, LocalTime shiftStop, int interval, int gracePeriod, int dock, LocalTime lunchStart, LocalTime lunchStop, int lunchDeduct) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
     //gets
     public int getId()
     {
@@ -53,7 +44,7 @@ public class Shift {
     {
         return interval;
     }
-        public Time getShiftBegin()
+        public LocalTime getShiftBegin()
     {
         return shiftBegin;
     }
@@ -65,7 +56,7 @@ public class Shift {
     {
         return dock;
     }
-    public Time getLunchBegin()
+    public LocalTime getLunchBegin()
     {
         return lunchBegin;
     }
@@ -73,11 +64,11 @@ public class Shift {
     {
         return lunchDeduct;
     }
-    public Time getLunchEnd()
+    public LocalTime getLunchEnd()
     {
         return lunchEnd;
     }
-    public Time getShiftEnd()
+    public LocalTime getShiftEnd()
     {
         return shiftEnd;
     }
@@ -85,7 +76,7 @@ public class Shift {
     {
         return description;
     }
-    private long getElapsedTime(Time s, Time e)
+    /*private long getElapsedTime(LocalTime s, LocalTime e)
     {
         Calendar BeginCal = GregorianCalendar.getInstance();
         Calendar endCal = GregorianCalendar.getInstance();
@@ -96,9 +87,9 @@ public class Shift {
         begin = BeginCal.getTimeInMillis();
         end = endCal.getTimeInMillis();
         return (end - begin) / (60 * 1000);
-    }
+    }*/
     // formats and Overrides toString
-    @Override
+    /*@Override
     public String toString()
     {
         String beginTime = (new SimpleDateFormat("HH:mm")).format(shiftBegin.getTime());
@@ -115,7 +106,7 @@ public class Shift {
         data += getElapsedTime(lunchBegin, lunchEnd) + " minutes)";
         data += endTime + " (";
         return data;
-    }
+    }*/
 }
 
 
