@@ -93,12 +93,6 @@ public class ShiftParameters {
         this.description = description;
     }
 
-    LocalTime getbegin() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
-    LocalTime getend() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }

@@ -140,14 +140,14 @@ public class Punch {
     }
     public String printAdjusted(){
         DateTimeFormatter format = DateTimeFormatter.ofPattern("EEE " + "LL/dd/uuuu HH:mm:ss");
-        StringBuilder s = new StringBuilder();
-        s.append("#").append(badge.getId()).append(" ").append(punchType).append(": ").
+        StringBuilder str = new StringBuilder();
+        str.append("#").append(badge.getId()).append(" ").append(punchType).append(": ").
                 append(adjustedtimestamp.format(format).toUpperCase()).
                 append(" (").
                 append(adjustmenttype).
                 append(")");
                 
-        return s.toString();
+        return str.toString();
     }
    
    public void adjust(Shift s){
@@ -170,10 +170,8 @@ public class Punch {
         int sec = punchTime.getSecond();
        
         
-        
        
-        
-        // on time
+        // punch on time
         if(zeroPT.equals(shiftStart) || zeroPT.equals(shiftStop) || zeroPT.equals(lunchStart) || zeroPT.equals(lunchStop)){
             if (zeroPT.equals(shiftStart)){
                 adjustedPT = shiftStart;
@@ -194,7 +192,7 @@ public class Punch {
             }
             
         }
-        // punch in late start
+        // punching in late start
         else if ((punchTime.isAfter(shiftStart)) && (punchTime.isBefore(shiftStart.plusMinutes(interval)) 
                 || punchTime.equals(shiftStart.plusMinutes(interval))) && (punchType != PunchType.CLOCK_OUT) 
                 && (!originalTimeStamp.getDayOfWeek().equals(DayOfWeek.SATURDAY)) 
@@ -210,7 +208,7 @@ public class Punch {
             }
 
         }
-        // punch in early start
+        // punching in early start
         else if((punchTime.isBefore(shiftStart)) && (punchTime.isAfter(shiftStart.minusMinutes(interval)) 
                 || punchTime.equals(shiftStart.minusMinutes(interval))) && (punchType != PunchType.CLOCK_OUT) 
                 && (!originalTimeStamp.getDayOfWeek().equals(DayOfWeek.SATURDAY)) 
@@ -220,7 +218,7 @@ public class Punch {
         }
        
         
-        //punch out early stop
+        //punching out early stop
         else if((punchTime.isBefore(shiftStop)) && (punchTime.isAfter(shiftStop.minusMinutes(interval)) 
                 || punchTime.equals(shiftStop.minusMinutes(interval))) && (punchType != PunchType.CLOCK_IN) 
                 && (!originalTimeStamp.getDayOfWeek().equals(DayOfWeek.SATURDAY)) 
@@ -265,11 +263,11 @@ public class Punch {
             if(mod < 8){
                 if(sec < 30){
                     adjustedPT = punchTime.minusMinutes(mod).withSecond(0);
-                    this.adjustmenttype = "Interval Round";   
+                    this.adjustmenttype = "Interval round";   
                 }
                 else{
                     adjustedPT = punchTime.plusMinutes(interval - mod).withSecond(0);
-                    this.adjustmenttype = "Interval Round";
+                    this.adjustmenttype = "Interval round";
                 }
                 
             }
@@ -286,7 +284,7 @@ public class Punch {
             this.adjustmenttype = "None";
         }
 
-        this.adjustedtimestamp = adjustedPT;
+        this.adjustedtimestamp =adjustedPT;
     } 
 }
 

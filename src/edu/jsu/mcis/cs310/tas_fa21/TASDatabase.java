@@ -177,49 +177,38 @@ public class TASDatabase {
     
 
     
-    public Shift getShift(Badge badge) {//PERSONAL
+    public Shift getShift(Badge badge) {
         
-        Shift Shift = null;
+        Shift shift = null;
+        PreparedStatement pstSelect = null;
         
         try {
-            PreparedStatement pstSelect = conn.prepareStatement("select * from employee where badgeid= ?");
+            pstSelect = conn.prepareStatement("select * from employee where badgeid= ?");
+            pstSelect.setString(1, badge.getId());
 
             boolean hasResults = pstSelect.execute();
             
-            pstSelect.execute();
-            ResultSet resultset = pstSelect.getResultSet();
-            resultset.first();
-            
-            //Results
-            String badgeid = resultset.getString(1);
+          
+           
             if(hasResults){
-                resultset = pstSelect.getResultSet();
+                ResultSet resultset = pstSelect.getResultSet();
                 resultset.next();
                 
-                      
-                ShiftParameters params = new ShiftParameters();
-                    
-                params.setDescription(resultset.getString("description"));
-                params.setStart(LocalTime.parse(resultset.getString("start")));
-                params.setStop(LocalTime.parse(resultset.getString("stop")));
-                params.setInterval(resultset.getInt("interval"));
-                params.setGraceperiod(resultset.getInt("graceperiod"));
-                params.setDock(resultset.getInt("dock"));
-                params.setLunchstart(LocalTime.parse(resultset.getString("lunchstart")));
-                params.setLunchstop(LocalTime.parse(resultset.getString("lunchstop")));
-                params.setLunchdeduct(resultset.getInt("lunchdeduct"));
-                params.setId(resultset.getInt("id"));
-            Shift = new Shift(params);
+                int shiftid = resultset.getInt("shiftid");
+                shift = getShift(shiftid);
+                
+            }
        
         }
-        
-        
-        
-}       catch (SQLException ex) {
-            
-            System.err.println("** getShift: " + ex.toString());
+        catch (Exception ex) { ex.printStackTrace(); }
+        finally {
+            if ( pstSelect != null ) try { pstSelect.close(); } catch (Exception e) { e.printStackTrace(); }
         }
-        return Shift;
+        
+        return shift;
+        
+        
+        
     }
     
 
@@ -268,6 +257,7 @@ public class TASDatabase {
         try {
             String query = "SELECT * FROM punch WHERE badgeid=? AND DATE(originalTimeStamp)=?";
             PreparedStatement pstSelect = conn.prepareStatement(query);
+
             pstSelect.setString(1, badge.getId());
             pstSelect.setDate(2, java.sql.Date.valueOf(date));
             
