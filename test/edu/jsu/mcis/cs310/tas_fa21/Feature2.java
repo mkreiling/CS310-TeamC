@@ -32,7 +32,7 @@ public class Feature2 {
         String badgeid = p1.getBadge().getId();
         ots = p1.getOriginaltimestamp();
         int terminalid = p1.getTerminalid();
-        PunchType punchtype = p1.getPunchtype();
+        PunchType punchtype = p1.getPunchType();
         /* Insert Punch Into Database */
         
         int punchid = db.insertPunch(p1);
@@ -45,7 +45,7 @@ public class Feature2 {
         rts = p2.getOriginaltimestamp();
         
         assertEquals(terminalid, p2.getTerminalid());
-        assertEquals(punchtype, p2.getPunchtype());
+        assertEquals(punchtype, p2.getPunchType());
         assertEquals(ots.format(dtf), rts.format(dtf));
         
     }

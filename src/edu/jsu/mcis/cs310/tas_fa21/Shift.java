@@ -11,102 +11,135 @@ package edu.jsu.mcis.cs310.tas_fa21;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
-import java.time.LocalTime;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 
 public class Shift {
     
     //variables
+    private final int MINPERHOUR = 60;
+    private String description;
+    private int interval;
+    private int graceperiod;
+    private int dock;
+    private int lunchdeduct;
+    private int shiftid;
+    private int lunchduration;
+    private int shiftduration; 
+    private LocalTime start;
+    private LocalTime stop;
+    private LocalTime lunchstart; 
+    private LocalTime lunchstop;
     
-    private int id, gracePeriod, dock, interval, lunchDeduct;
-    private LocalTime shiftBegin, lunchBegin, lunchEnd, shiftEnd;
-    private final String description;
+    public Shift(ShiftParameters params) {
+        this.description = params.getDescription();
     
-    public Shift(int id, int interval, LocalTime begin, int gracePeriod, int dock, LocalTime lunchBegin, int lunchDeduct, LocalTime lunchEnd, LocalTime end, String description)
-    {
-        this.id = id;
-        this.interval = interval;
-        this.shiftBegin = begin;
-        this.gracePeriod = gracePeriod;
-        this.dock = dock;
-        this.lunchBegin = lunchBegin;
-        this.lunchDeduct = lunchDeduct;
-        this.lunchEnd = lunchEnd;
-        this.shiftEnd = end;
-        this.description = description;
+        this.interval = params.getInterval();
+        this.graceperiod = params.getGraceperiod();
+        this.dock = params.getDock();
+        this.lunchdeduct = params.getLunchdeduct();
+ 
+    
+        this.start = params.getStart();
+        this.stop = params.getStop();
+        this.lunchstart = params.getLunchstart();
+        this.lunchstop = params.getLunchstop();
+        this.shiftid = params.getId();
+
+        this.
+        setShiftduration(params.getStart(), params.getStop());
+        setLunchduration(params.getLunchstart(), params.getLunchstop());
     }
     
     //gets
-    public int getId()
-    {
-        return id;
-    }
-    public int getInterval()
-    {
-        return interval;
-    }
-        public LocalTime getShiftBegin()
-    {
-        return shiftBegin;
-    }
-    public int getGracePeriod()
-    {
-        return gracePeriod;
-    }
-    public int getDock()
-    {
-        return dock;
-    }
-    public LocalTime getLunchBegin()
-    {
-        return lunchBegin;
-    }
-    public int getLunchDeduct()
-    {
-        return lunchDeduct;
-    }
-    public LocalTime getLunchEnd()
-    {
-        return lunchEnd;
-    }
-    public LocalTime getShiftEnd()
-    {
-        return shiftEnd;
+    public Shift(Badge badgeid){
+        
     }
     public String getDescription()
     {
         return description;
     }
-    /*private long getElapsedTime(LocalTime s, LocalTime e)
-    {
-        Calendar BeginCal = GregorianCalendar.getInstance();
-        Calendar endCal = GregorianCalendar.getInstance();
-        BeginCal.setTimeInMillis(s.getTime());
-        endCal.setTimeInMillis(e.getTime());
+    public LocalTime getStart(){
+        return start;
+    }
+    public LocalTime getStop(){
+        return stop;
+    }
+    public int getInterval(){
+        return interval;
+    }
+    public int getGraceperiod() {
+     
+        return graceperiod;
+    }
 
-        long begin, end;
-        begin = BeginCal.getTimeInMillis();
-        end = endCal.getTimeInMillis();
-        return (end - begin) / (60 * 1000);
-    }*/
-    // formats and Overrides toString
-    /*@Override
-    public String toString()
-    {
-        String beginTime = (new SimpleDateFormat("HH:mm")).format(shiftBegin.getTime());
-        String lunchBeginTime = (new SimpleDateFormat("HH:mm")).format(lunchBegin.getTime());
-        String lunchEndTime = (new SimpleDateFormat("HH:mm")).format(lunchEnd.getTime());
-        String endTime = (new SimpleDateFormat("HH:mm")).format(shiftEnd.getTime());
-        String data = "";
+    public int getDock() {
+     
+        return dock;
+    }
+
+    public LocalTime getLunchstart() {
+      
+        return lunchstart;
+    }
+
+    public LocalTime getLunchstop() {
+        return lunchstop;
+    }
+
+    public int getLunchdeduct() {
+        return lunchdeduct;
+    }
+    
+    public int getShiftid() {
+        return shiftid;
+    }
+
+    public int getLunchduration() {
+        return lunchduration;
+    }
+
+    public int getShiftduration() {
+        return shiftduration;
+    }
+    
+    
+    
+    
+    private void setShiftduration(LocalTime start, LocalTime stop){
+        int startmin = start.getHour() * MINPERHOUR + start.getMinute();
+        int stopmin = stop.getHour() * MINPERHOUR + stop.getMinute();
+      
+        this.shiftduration = stopmin - startmin; 
+    }
+    
+    private void setLunchduration(LocalTime lunchstart, LocalTime lunchstop){
+        int startmin = (lunchstart.getHour() * MINPERHOUR) + lunchstart.getMinute();
+        int stopmin = (lunchstop.getHour() * MINPERHOUR) + lunchstop.getMinute();
+       
+        this.lunchduration = stopmin - startmin;      
+    }
+    
+     @Override
+    public String toString() {
+    
+        String beginTime = start.toString();
+        String lunchBeginTime = lunchstart.toString();
+        String lunchEndTime = lunchstop.toString();
+        String endTime = stop.toString();
+
+        StringBuilder d = new StringBuilder();
+        d.append(description).append(": ").append(beginTime).append(" - ").append(endTime).append(" (");
+        d.append(start.until(stop, ChronoUnit.MINUTES)).append(" minutes); ");
+        d.append("Lunch: ").append(lunchBeginTime).append(" - ").append(lunchEndTime).append(" (").append(lunchstart.until(lunchstop, ChronoUnit.MINUTES));
+        d.append(" minutes)");
         
-        data += description + ": ";
-        data += beginTime + " - ";
-        data += getElapsedTime(shiftBegin, shiftEnd) + " minutes);";
-        data += " Lunch: " + lunchBeginTime + " - ";
-        data += lunchEndTime + " (";
-        data += getElapsedTime(lunchBegin, lunchEnd) + " minutes)";
-        data += endTime + " (";
-        return data;
-    }*/
+        
+        return d.toString();
+    }
+  
+ 
+  
 }
 
 

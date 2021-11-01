@@ -6,17 +6,7 @@
 //Stephen Littlefield
 
 
-/*
-import edu.jsu.mcis.cs310.tas_fa21.Badge;
-import edu.jsu.mcis.cs310.tas_fa21.ShiftParameters;
-import java.sql.*;
-import java.time.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-*/
+
 package edu.jsu.mcis.cs310.tas_fa21;
 
 import java.sql.*;
@@ -24,6 +14,8 @@ import java.sql.Connection;
 import java.time.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 
@@ -63,7 +55,7 @@ public class TASDatabase {
         }
     }
     
-    public Badge getBadge(String badgeid){
+    public Badge getBadge(String ID){
         
         Badge badge = null;
         
@@ -71,19 +63,17 @@ public class TASDatabase {
             
             PreparedStatement pstSelect = conn.prepareStatement("SELECT * FROM badge where id = ?");
             
-            pstSelect.setString(1, badgeid);
+            pstSelect.setString(1, ID);
             
             boolean hasresults = pstSelect.execute();
             
             if (hasresults) {
             
                 ResultSet resultset = pstSelect.getResultSet();
-                resultset.first();
+                resultset.next();
 
-                String id = resultset.getString("id");
-                String description = resultset.getString("description");
 
-                badge = new Badge(id, description);
+                badge = new Badge(resultset.getString("id"), resultset.getString("description"));
                 
             }
 
@@ -116,8 +106,8 @@ public class TASDatabase {
                 resultset.first();
                 int id = resultset.getInt("id");
                 int terminalID = resultset.getInt("terminalid");
-                String badgeID = resultset.getString("badgeid");
-                Badge badge = getBadge(badgeID);
+                String badgeid = resultset.getString("badgeid");
+                Badge badge = getBadge(badgeid);
                 LocalDateTime originalTimeStamp = resultset.getTimestamp("originaltimestamp").toLocalDateTime();
 
                 PunchType punchtype = PunchType.values()[resultset.getInt("punchtypeid")];
@@ -137,65 +127,102 @@ public class TASDatabase {
         return punch;
     }
     
-    
     public Shift getShift(int shiftID) {
         
-        Shift shift = null;
+        Shift shift = null; 
+    
+
         
         try {
-            PreparedStatement pstSelect = conn.prepareStatement("select * from shift where id = ?");
-            
+            PreparedStatement pstSelect = conn.prepareStatement("SELECT * from shift where id = ?");
             pstSelect.setInt(1, shiftID);
             
-            pstSelect.execute();
-            
-            ResultSet resultset = pstSelect.getResultSet();
-            resultset.first();
-            
-            //Results
-            int idNum = resultset.getInt("id");
-            LocalTime start = resultset.getTime("start").toLocalTime();
-            // continue for all the other fields in the "Shift" table
-            
-            //shift = new Shift(idNum);
+            boolean hasresult = pstSelect.execute();
+             
+            if(hasresult) {
+                
+                System.err.println("Getting shift data ...");
+                 
+                ResultSet resultset = pstSelect.getResultSet();
+                
+                resultset.first();
+
+                //Results
+                 ShiftParameters params = new ShiftParameters();
+                    
+                params.setDescription(resultset.getString("description"));
+                params.setStart(LocalTime.parse(resultset.getString("start")));
+                params.setStop(LocalTime.parse(resultset.getString("stop")));
+                params.setInterval(resultset.getInt("interval"));
+                params.setGraceperiod(resultset.getInt("graceperiod"));
+                params.setDock(resultset.getInt("dock"));
+                params.setLunchstart(LocalTime.parse(resultset.getString("lunchstart")));
+                params.setLunchstop(LocalTime.parse(resultset.getString("lunchstop")));
+                params.setLunchdeduct(resultset.getInt("lunchdeduct"));
+                params.setId(shiftID);
+               
+                shift = new Shift(params);
+
+
+
+            }
         }
         
         catch(Exception e) {
-            System.err.println("** getShift: " + e.toString());
+            e.printStackTrace();
         }
-        
         return shift;
-        
     }
     
-    public Shift getShift(Badge badge) {
+    
+
+    
+    public Shift getShift(Badge badge) {//PERSONAL
         
-        Shift shift = null;
+        Shift Shift = null;
         
         try {
-            PreparedStatement pstSelect = conn.prepareStatement("select * from employee where id=1");
-            
-            
+            PreparedStatement pstSelect = conn.prepareStatement("select * from employee where badgeid= ?");
+
+            boolean hasResults = pstSelect.execute();
             
             pstSelect.execute();
             ResultSet resultset = pstSelect.getResultSet();
             resultset.first();
             
             //Results
-            String idNum = resultset.getString(1);
+            String badgeid = resultset.getString(1);
+            if(hasResults){
+                resultset = pstSelect.getResultSet();
+                resultset.next();
+                
+                      
+                ShiftParameters params = new ShiftParameters();
+                    
+                params.setDescription(resultset.getString("description"));
+                params.setStart(LocalTime.parse(resultset.getString("start")));
+                params.setStop(LocalTime.parse(resultset.getString("stop")));
+                params.setInterval(resultset.getInt("interval"));
+                params.setGraceperiod(resultset.getInt("graceperiod"));
+                params.setDock(resultset.getInt("dock"));
+                params.setLunchstart(LocalTime.parse(resultset.getString("lunchstart")));
+                params.setLunchstop(LocalTime.parse(resultset.getString("lunchstop")));
+                params.setLunchdeduct(resultset.getInt("lunchdeduct"));
+                params.setId(resultset.getInt("id"));
+            Shift = new Shift(params);
+       
+        }
+        
+        
+        
+}       catch (SQLException ex) {
             
-         
+            System.err.println("** getShift: " + ex.toString());
         }
-        
-        catch(Exception e) {
-            System.err.println("** getShift: " + e.toString());
-        }
-        
-        return shift;
-        
+        return Shift;
     }
+    
 
-   
         public int insertPunch(Punch p){
             
             int results = 0;
@@ -206,7 +233,7 @@ public class TASDatabase {
           
             String badgeid = p.getBadge().getId(); 
             int terminalid = p.getTerminalid(); 
-            PunchType punchtypeid = p.getPunchtype(); 
+            PunchType punchtypeid = p.getPunchType(); 
           
 
          try{
@@ -230,7 +257,7 @@ public class TASDatabase {
              }
                 
          }
-         catch(Exception e){ e.printStackTrace();} // changed these to output differently and just print the full stack
+         catch(Exception e){ e.printStackTrace();} 
          return results;    
     }
 
@@ -255,13 +282,13 @@ public class TASDatabase {
                 while(resultsSet.next()) {
                     int id = resultsSet.getInt("id");
                     int terminalID = resultsSet.getInt("terminalid");
-                    String badgeID = resultsSet.getString("badgeid");
+                    String badgeid = resultsSet.getString("badgeid");
                     LocalDateTime originalTimeStamp = resultsSet.getTimestamp("originalTimeStamp").toLocalDateTime();
                     int punchTypeID = resultsSet.getInt("punchTypeId");
                     
                     //  Punch (int id, int terminalID, Badge badge, LocalDateTime originalTimeStamp, PunchType punchTypeID)
                    
-                    Punch punch = new Punch (id, terminalID, getBadge(badgeID), originalTimeStamp, PunchType.values()[punchTypeID]);
+                    Punch punch = new Punch (id, terminalID, getBadge(badgeid), originalTimeStamp, PunchType.values()[punchTypeID]);
                     alist.add(punch);
                     
                 }
@@ -273,6 +300,7 @@ public class TASDatabase {
         return alist;   
         
     }
+    
 
    
 
