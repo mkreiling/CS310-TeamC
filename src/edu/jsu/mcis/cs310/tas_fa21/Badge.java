@@ -15,28 +15,24 @@ package edu.jsu.mcis.cs310.tas_fa21;
 public class Badge {
     
     //Variables for id and name
-    private String ID;
-    private String Description;  
+    public final String id;
+    public final String Description;  
 
     //Constructor for badge
-    public Badge(String badgeid, String badgeDescription) {
-        this.ID = badgeid;
+    public Badge(String id, String badgeDescription) {
+        this.id = id;
         this.Description = badgeDescription;
     }
     
     //Getters
     public String getId() {
-        return ID;
+        return id;
     }
-        public void setID(String newID){
-            this.ID = newID;
-        }
+
     public String getDescription() {
         return Description;
     }
- public void setDescription(String newDescription) {
-        this.Description = newDescription;
-    }
+
     
     //toString method will print the id number and name of the badge owner
 
@@ -45,7 +41,7 @@ public class Badge {
       
         StringBuilder s = new StringBuilder();
         
-        s.append('#').append(ID).append(" (").append(Description).append(')');
+        s.append('#').append(id).append(" (").append(Description).append(')');
         
         return s.toString(); 
     }

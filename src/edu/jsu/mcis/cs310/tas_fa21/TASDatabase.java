@@ -16,7 +16,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.time.format.DateTimeFormatter;
+import static java.time.temporal.ChronoUnit.MINUTES;
+import java.util.GregorianCalendar;
 
 
 public class TASDatabase {
@@ -55,15 +57,15 @@ public class TASDatabase {
         }
     }
     
-    public Badge getBadge(String ID){
+    public Badge getBadge(String id){
         
-        Badge badge = null;
+        Badge badge= null;
         
         try{
             
             PreparedStatement pstSelect = conn.prepareStatement("SELECT * FROM badge where id = ?");
             
-            pstSelect.setString(1, ID);
+            pstSelect.setString(1, id);
             
             boolean hasresults = pstSelect.execute();
             
@@ -79,21 +81,22 @@ public class TASDatabase {
 
         }
         
-        catch(Exception e){
-            System.err.println("** getBadge: " + e.toString());
+        //catch(Exception e){
+            //System.err.println("** getBadge: " + e.toString());
+            catch(SQLException e){ System.out.println("Error in getBadge() " + e); 
         }
         
         return badge;
         
     }
     
-    public Punch getPunch(int punchid) {
-        
+    public Punch getPunch(int id) {
+       // DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MM-dd-yyyy HH:mm:ss");
         Punch punch = null;
         
         try {
             PreparedStatement pstSelect = conn.prepareStatement("select * from punch where id=?");
-            pstSelect.setInt(1, punchid);
+            pstSelect.setInt(1, id);
             
             boolean hasresult = pstSelect.execute();
             
@@ -103,18 +106,18 @@ public class TASDatabase {
 
                 ResultSet resultset = pstSelect.getResultSet();
 
-                resultset.first();
-                int id = resultset.getInt("id");
-                int terminalID = resultset.getInt("terminalid");
+                resultset.next();
+              
+                //int id = resultset.getInt("id");                    
+                int terminalid = resultset.getInt("terminalid");
                 String badgeid = resultset.getString("badgeid");
-                Badge badge = getBadge(badgeid);
-                LocalDateTime originalTimeStamp = resultset.getTimestamp("originaltimestamp").toLocalDateTime();
-
-                PunchType punchtype = PunchType.values()[resultset.getInt("punchtypeid")];
-
+                LocalDateTime originalTimeStamp = resultset.getTimestamp("originaltimestamp").toLocalDateTime(); 
+                int punchtypeid = resultset.getInt("punchtypeid");
+                int punchid = resultset.getInt("id");
+                //PunchType punchtype = PunchType.values()[resultset.getInt("punchtypeid")];
 
                 //  Punch (int id, int terminalID, Badge badge, LocalDateTime originalTimeStamp, PunchType punchTypeID)
-                punch = new Punch(id, terminalID, badge, originalTimeStamp, punchtype);
+                punch = new Punch(terminalid, getBadge(badgeid),punchtypeid,  originalTimeStamp, punchid);
                 
             }
             
@@ -148,6 +151,7 @@ public class TASDatabase {
                 resultset.first();
 
                 //Results
+                
                  ShiftParameters params = new ShiftParameters();
                     
                 params.setDescription(resultset.getString("description"));
@@ -162,6 +166,7 @@ public class TASDatabase {
                 params.setId(shiftID);
                
                 shift = new Shift(params);
+
 
 
 
@@ -212,52 +217,59 @@ public class TASDatabase {
     }
     
 
+    
+    
+    
         public int insertPunch(Punch p){
-            
-            int results = 0;
-            
-            
-           
-            LocalDateTime time = p.getOriginaltimestamp();
-          
-            String badgeid = p.getBadge().getId(); 
-            int terminalid = p.getTerminalid(); 
-            PunchType punchtypeid = p.getPunchType(); 
-          
 
-         try{
-             String query = "INSERT INTO tas_fa21_v1.punch (terminalid, badgeid, originaltimestamp, punchtypeid) VALUES (?, ?, ?, ?)"; 
-             PreparedStatement pstUpdate = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS); 
+        int results = 0;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime originalTime = p.getOriginaltimestamp();
+        String otsString = originalTime.format(dtf);
+        System.err.println("New Punch Timestamp (from insertPunch(): " + otsString);
+        Badge badge = p.getBadge(); 
+        int terminalid = p.getTerminalid(); 
+        PunchType punchtypeid = p.getPunchType(); 
+
+        try{
+            String query = "INSERT INTO tas_fa21_v1.punch (terminalid, badgeid, originaltimestamp, punchtypeid) VALUES (?, ?, ?, ?)"; 
+            PreparedStatement pstUpdate = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS); 
              
-             pstUpdate.setInt(1, terminalid);
-             pstUpdate.setString(2, badgeid);
-             pstUpdate.setTimestamp(3, java.sql.Timestamp.valueOf(time)); // this is now a set to timestamp instead of a string
-             pstUpdate.setInt(4, punchtypeid.ordinal());
+            pstUpdate.setInt(1, terminalid);
+            pstUpdate.setString(2, badge.getId());
+            pstUpdate.setString(3, otsString);
+            pstUpdate.setInt(4, punchtypeid.ordinal());
              
-             int updateCount = pstUpdate.executeUpdate();
+            int updateCount = pstUpdate.executeUpdate();
              
-             if(updateCount > 0){
+            if(updateCount > 0){
                  
-                 ResultSet resultset = pstUpdate.getGeneratedKeys(); 
+                ResultSet resultset = pstUpdate.getGeneratedKeys(); 
                  
-                 if (resultset.next()){
-                     results = resultset.getInt(1);
-                 }
-             }
-                
-         }
-         catch(Exception e){ e.printStackTrace();} 
-         return results;    
+                if (resultset.next()){
+                    results = resultset.getInt(1);
+                }
+            }
+        }
+        catch(SQLException e){ System.err.println("insertPunch: " + e);}
+        //System.err.println("New Punch ID: " + results);
+        
+        return results;    
     }
+        
+        
 
     public ArrayList<Punch> getDailyPunchList(Badge badge, LocalDate date) {
         
-       ArrayList<Punch> alist = null;
-        
+       ArrayList<Punch> output = null;
+                Punch obj; 
+        output = new ArrayList<>(); 
+        String strbadge = badge.getId();
         try {
             String query = "SELECT * FROM punch WHERE badgeid=? AND DATE(originalTimeStamp)=?";
             PreparedStatement pstSelect = conn.prepareStatement(query);
-
+            pstSelect.setString(1, strbadge);
+            pstSelect.setDate(2, java.sql.Date.valueOf(date));
             pstSelect.setString(1, badge.getId());
             pstSelect.setDate(2, java.sql.Date.valueOf(date));
             
@@ -266,28 +278,30 @@ public class TASDatabase {
             
             if(hasResults){
                 
-                alist = new ArrayList<>();
+                //output = new ArrayList<>();
                 
                 ResultSet resultsSet = pstSelect.getResultSet();
                 while(resultsSet.next()) {
+                    
                     int id = resultsSet.getInt("id");
-                    int terminalID = resultsSet.getInt("terminalid");
+                    int terminalid = resultsSet.getInt("terminalid");
                     String badgeid = resultsSet.getString("badgeid");
                     LocalDateTime originalTimeStamp = resultsSet.getTimestamp("originalTimeStamp").toLocalDateTime();
-                    int punchTypeID = resultsSet.getInt("punchTypeId");
-                    
-                    //  Punch (int id, int terminalID, Badge badge, LocalDateTime originalTimeStamp, PunchType punchTypeID)
+                    int punchTypeid = resultsSet.getInt("punchTypeId");
                    
-                    Punch punch = new Punch (id, terminalID, getBadge(badgeid), originalTimeStamp, PunchType.values()[punchTypeID]);
-                    alist.add(punch);
+                     int punchid = resultsSet.getInt("id");
+                    obj = getPunch(punchid);
+
+                    output.add(obj);
+
                     
                 }
             }
                   
         }
         catch (Exception e) { e.printStackTrace(); }
-        
-        return alist;   
+       return output;
+
         
     }
     

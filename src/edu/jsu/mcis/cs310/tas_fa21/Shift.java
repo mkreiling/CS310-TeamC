@@ -13,10 +13,14 @@ import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
+import static java.time.temporal.ChronoUnit.MINUTES;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Shift {
     
     //variables
+    private int id;
     private final int MINPERHOUR = 60;
     private String description;
     private int interval;
@@ -30,6 +34,12 @@ public class Shift {
     private LocalTime stop;
     private LocalTime lunchstart; 
     private LocalTime lunchstop;
+    //private LocalTime lunchstart;//Detects when lunch will start (locally).
+    //private LocalTime lunchstop; //Detects when lunch will stop (locally).
+    private int lunchDeductTime; //Will deduct the time from employee.
+   // private long lunchduration; //Length of lunch duration.
+    //private long shiftduration; /
+    
     
     public Shift(ShiftParameters params) {
         this.description = params.getDescription();
@@ -51,10 +61,15 @@ public class Shift {
         setLunchduration(params.getLunchstart(), params.getLunchstop());
     }
     
+    
     //gets
-    public Shift(Badge badgeid){
         
+        
+        
+       public int getId() {
+        return id; 
     }
+    
     public String getDescription()
     {
         return description;
@@ -90,6 +105,9 @@ public class Shift {
     public int getLunchdeduct() {
         return lunchdeduct;
     }
+     public int getLunchDeductTime() {
+        return lunchDeductTime;
+    }
     
     public int getShiftid() {
         return shiftid;
@@ -102,7 +120,7 @@ public class Shift {
     public int getShiftduration() {
         return shiftduration;
     }
-    
+   
     
     
     
