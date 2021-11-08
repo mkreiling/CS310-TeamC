@@ -350,30 +350,30 @@ public class Punch {
  
     }
   
-              public String printOriginal(){
+       public String printOriginal(){
             
-        StringBuilder s = new StringBuilder();
+        StringBuilder str = new StringBuilder();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
          
 
 
-        s.append('#').append(badgeid.getId()).append(" ").append(punchTypeid);
-        s.append(": ").append((formatter.format(originalTimeStamp)).toUpperCase());
-        System.out.println(s.toString());
+        str.append('#').append(badgeid.getId()).append(" ").append(punchTypeid);
+        str.append(": ").append((formatter.format(originalTimeStamp)).toUpperCase());
+        System.out.println(str.toString());
 
-        return s.toString();
+        return str.toString();
     }
         public String printAdjusted(){
 
-        StringBuilder s = new StringBuilder();
+        StringBuilder str = new StringBuilder();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
 
-        s.append('#').append(badgeid.getId()).append(" ").append(punchTypeid);
-        s.append(": ").append(formatter.format(adjustedtimestamp).toUpperCase());
-        s.append(" (").append(adjustmenttype).append(")");
-        System.out.println(s);
+        str.append('#').append(badgeid.getId()).append(" ").append(punchTypeid);
+        str.append(": ").append(formatter.format(adjustedtimestamp).toUpperCase());
+        str.append(" (").append(adjustmenttype).append(")");
+        System.out.println(str);
             
-        return s.toString();
+        return str.toString();
         
     }
 

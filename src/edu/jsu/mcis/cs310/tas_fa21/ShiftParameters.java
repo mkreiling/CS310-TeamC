@@ -11,6 +11,7 @@ import java.time.LocalTime;
 
 public class ShiftParameters {
     
+    
     private int id, interval, graceperiod, dock, lunchdeduct;
     private LocalTime start, stop, lunchstart, lunchstop;
     private String description;
@@ -96,7 +97,7 @@ public class ShiftParameters {
     }
 
 
-    
+  
 }
 
 

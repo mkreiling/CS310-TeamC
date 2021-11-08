@@ -63,13 +63,11 @@ p4.printAdjusted());
         /* Compare Adjusted Timestamps to Expected Values */
         assertEquals("#F1EE0555 CLOCK IN: SAT 08/11/2018 05:54:58", 
 p1.printOriginal());
-        assertEquals("#F1EE0555 CLOCK IN: SAT 08/11/2018 06:00:00 (Interval 
-Round)", p1.printAdjusted());
+        assertEquals("#F1EE0555 CLOCK IN: SAT 08/11/2018 06:00:00 (Interval Round)", p1.printAdjusted());
         
         assertEquals("#F1EE0555 CLOCK OUT: SAT 08/11/2018 12:04:02", 
 p2.printOriginal());
-        assertEquals("#F1EE0555 CLOCK OUT: SAT 08/11/2018 12:00:00 (Interval 
-Round)", p2.printAdjusted());
+        assertEquals("#F1EE0555 CLOCK OUT: SAT 08/11/2018 12:00:00 (Interval Round)", p2.printAdjusted());
         
     }
     
@@ -112,13 +110,11 @@ p2.printAdjusted());
         /* Compare Adjusted Timestamps to Expected Values */
         assertEquals("#08D01475 CLOCK IN: SAT 09/22/2018 05:49:00", 
 p1.printOriginal());
-        assertEquals("#08D01475 CLOCK IN: SAT 09/22/2018 05:45:00 (Interval 
-Round)", p1.printAdjusted());
+        assertEquals("#08D01475 CLOCK IN: SAT 09/22/2018 05:45:00 (Interval Round)", p1.printAdjusted());
         
         assertEquals("#08D01475 CLOCK OUT: SAT 09/22/2018 12:04:15", 
 p2.printOriginal());
-        assertEquals("#08D01475 CLOCK OUT: SAT 09/22/2018 12:00:00 (Interval 
-Round)", p2.printAdjusted());
+        assertEquals("#08D01475 CLOCK OUT: SAT 09/22/2018 12:00:00 (Interval Round)", p2.printAdjusted());
         
     }
     
@@ -162,8 +158,7 @@ p3.printAdjusted());
         
         assertEquals("#D2C39273 CLOCK OUT: MON 09/10/2018 15:07:52", 
 p4.printOriginal());
-        assertEquals("#D2C39273 CLOCK OUT: MON 09/10/2018 15:15:00 (Interval 
-Round)", p4.printAdjusted());
+        assertEquals("#D2C39273 CLOCK OUT: MON 09/10/2018 15:15:00 (Interval Round)", p4.printAdjusted());
         assertEquals("#408B195F CLOCK OUT: TUE 08/21/2018 15:28:13", 
 p5.printOriginal());
         assertEquals("#408B195F CLOCK OUT: TUE 08/21/2018 15:30:00 (Shift Stop)", 
