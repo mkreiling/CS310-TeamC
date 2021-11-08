@@ -28,10 +28,9 @@ public class TAS {
         for (Punch punch : dailypunchlist){
             punch.adjust(s);
         }
-        //calculateTotalMinutes(dailypunchlist, s);
         
     }
-    /*
+    
     public static int calculateTotalMinutes(ArrayList<Punch> dailypunchlist, Shift shift){
         int time = 0; 
         
@@ -70,33 +69,6 @@ public class TAS {
         
         
     }
-    */
-    /*
-    public static String getPunchListAsJSON(ArrayList<Punch> dailypunchlist){
-     
-   
-        ArrayList<HashMap<String, String>> jsonData = new ArrayList<>();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("EEE" + " LL/dd/uuuu HH:mm:ss" );
-         
-        for(Punch punch : dailypunchlist){
-            
-            HashMap<String, String> punchData = new HashMap<>();
-
-            punchData.put("originaltimestamp", String.valueOf(punch.getOriginaltimestamp().format(format).toUpperCase()));
-            punchData.put("badgeid", String.valueOf(punch.getBadge().getId()));
-            punchData.put("adjustedtimestamp", String.valueOf(punch.getAdjustedtimestamp().format(format).toUpperCase()));
-            punchData.put("adjustmenttype", String.valueOf(punch.getAdjustmenttype()));
-            punchData.put("terminalid", String.valueOf(punch.getTerminalid()));
-            punchData.put("id",String.valueOf(punch.getId())); 
-            punchData.put("punchtype", String.valueOf(punch.getPunchType()));
-            
-            jsonData.add(punchData);
-        }
-        
-        String json = JSONValue.toJSONString(jsonData);
-        return json;
-    }
-*/
 
      public static double calculateAbsenteeism(ArrayList<Punch> punchlist, Shift s){
         
