@@ -11,7 +11,7 @@
 
 package edu.jsu.mcis.cs310.tas_fa21;
 
-
+/*
 import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -27,7 +27,22 @@ import java.time.temporal.WeekFields;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+*/
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -49,40 +64,36 @@ public class Punch {
     private PunchType punchTypeid;
     private LocalDateTime originalTimeStamp;
     private LocalDateTime adjustedTimeStamp;
-    private String adjustmentype;
+    
     private String adjustMessage;
-    private Timestamp LocalDateTime;
+    //private Timestamp LocalDateTime;
     private LocalDateTime adjustedtimestamp;
     private String adjustmenttype;
     
    
    
+    
      public Punch(int terminalid, Badge badgeid, int punchtypeid) {
-          
-        this.badgeid = badgeid;  
-        this.terminalid = terminalid;
-        //this.originalTimeStamp = LocalDateTime.now();
-        this.originalTimeStamp = originalTimeStamp;
-        this.punchTypeid = PunchType.values()[punchtypeid];
-        //this.id = 0;
-        //this.adjustedtimestamp = LocalDateTime.now(); 
-        this.adjustedtimestamp=adjustedTimeStamp;
-        this.adjustmenttype = null;
-    }
-      
-    public Punch(int terminalid, Badge badgeid, int punchtypeid, LocalDateTime TimeStamp, int punchid) {
           
         this.badgeid = badgeid;
         this.terminalid = terminalid;
-        this.originalTimeStamp = TimeStamp;
+        this.originalTimeStamp = LocalDateTime.now();
+        this.punchTypeid = PunchType.values()[punchtypeid];
+        this.adjustedtimestamp = LocalDateTime.now(); 
+        this.adjustmenttype = null;
+    }
+      
+    public Punch(int terminalid, Badge badgeid, int punchtypeid, LocalDateTime originalTimeStamp, int punchid) {
+          
+        this.badgeid = badgeid;
+        this.terminalid = terminalid;
+        this.originalTimeStamp = originalTimeStamp;
         this.punchTypeid = PunchType.values()[punchtypeid];
         this.id = punchid;
 
-        this.adjustedtimestamp = TimeStamp; 
+        this.adjustedtimestamp = originalTimeStamp; 
         this.adjustmenttype = null;
     }
-    
-   
     
      public int getId(){
         return id; 
@@ -124,43 +135,43 @@ public class Punch {
         this.adjustmenttype = adjustmenttype;
     }
     
+      
      
        public void adjust(Shift s){
 
         TemporalField usweekday = WeekFields.of(Locale.US).dayOfWeek();
-           
-        
 
-        LocalDateTime shiftstart = s.getStart().atDate(originalTimeStamp.toLocalDate());//Shift start
+        LocalDateTime shiftstart = s.getStart().atDate(originalTimeStamp.toLocalDate());
         shiftstart = shiftstart.withSecond(0).withNano(0);
        
-        LocalDateTime shiftstop = s.getStop().atDate(originalTimeStamp.toLocalDate()); //Shift stop
+        LocalDateTime shiftstop = s.getStop().atDate(originalTimeStamp.toLocalDate()); 
         shiftstop = shiftstop.withSecond(0).withNano(0);
             
-        LocalDateTime lunchstart = s.getLunchstart().atDate(originalTimeStamp.toLocalDate()); //Lunch start
-        LocalDateTime lunchstop = s.getLunchstop().atDate(originalTimeStamp.toLocalDate()); //Lunch stop
+        LocalDateTime lunchstart = s.getLunchstart().atDate(originalTimeStamp.toLocalDate()); 
+        LocalDateTime lunchstop = s.getLunchstop().atDate(originalTimeStamp.toLocalDate()); 
            
-        LocalDateTime shiftstartgrace = shiftstart.plusMinutes(s.getGraceperiod()); //Shift start grace period
-        LocalDateTime shiftstopgrace = shiftstop.minusMinutes(s.getGraceperiod()); //Shift stop grace period
+        LocalDateTime shiftstartgrace = shiftstart.plusMinutes(s.getGraceperiod()); 
+        
+        LocalDateTime shiftstopgrace = shiftstop.minusMinutes(s.getGraceperiod()); 
            
-        LocalDateTime shiftstartplus = shiftstart.plusMinutes(s.getInterval()); //After shift start time
-        LocalDateTime shiftstartminus = shiftstart.minusMinutes(s.getInterval()); //Before shift start time
+        LocalDateTime shiftstartplus = shiftstart.plusMinutes(s.getInterval()); 
+        LocalDateTime shiftstartminus = shiftstart.minusMinutes(s.getInterval()); 
            
-        LocalDateTime shiftstopplus = shiftstop.plusMinutes(s.getInterval()); //Before shift stop time
-        LocalDateTime shiftstopminus = shiftstop.minusMinutes(s.getInterval()); //After shift stop time
+        LocalDateTime shiftstopplus = shiftstop.plusMinutes(s.getInterval()); 
+        LocalDateTime shiftstopminus = shiftstop.minusMinutes(s.getInterval()); 
            
-        LocalDateTime shiftstartdockplus = shiftstart.plusMinutes(s.getDock()); //Shift start dock time
-        LocalDateTime shiftstopdockminus = shiftstop.minusMinutes(s.getDock()); //Shift stop dock time
+        LocalDateTime shiftstartdockplus = shiftstart.plusMinutes(s.getDock());
+        LocalDateTime shiftstopdockminus = shiftstop.minusMinutes(s.getDock()); 
             
         int dayofweek = originalTimeStamp.get(usweekday);
         int roundint = originalTimeStamp.toLocalTime().getMinute() % s.getInterval(); 
-        int half = s.getInterval()/2; 
+        int h = s.getInterval()/2; 
         long roundlong;
             
-        /*Punchtypes*/
+        //Punchtypes
         if(punchTypeid == PunchType.CLOCK_IN){
                
-            //weekdays 
+            //weekdays(Mon-Fri) 
             if(dayofweek != Calendar.SATURDAY && dayofweek != Calendar.SUNDAY){
                
                 if (originalTimeStamp.withSecond(0).withNano(0).isEqual(shiftstart)) {
@@ -201,14 +212,14 @@ public class Punch {
                     
                     if (roundint != 0) {
                         //round down.
-                        if(roundint < half) { 
+                        if(roundint < h) { 
                             roundlong = new Long(roundint);
                             adjustmenttype = "Interval Round";
                             adjustedtimestamp = originalTimeStamp.minusMinutes(roundlong).withSecond(0);
                         } 
                     
                         //round up.
-                        else if(roundint >= half){ 
+                        else if(roundint >= h){ 
                             roundlong = new Long(s.getInterval() - roundint);
                             adjustmenttype = "Interval Round";
                             adjustedtimestamp = originalTimeStamp.plusMinutes(roundlong).withSecond(0);
@@ -227,14 +238,14 @@ public class Punch {
                 if (roundint != 0) {
                     
                     //round down.
-                    if(roundint < half) { 
+                    if(roundint < h) { 
                         roundlong = new Long(roundint);
                         adjustmenttype = "Interval Round";
                         adjustedtimestamp = originalTimeStamp.minusMinutes(roundlong).withSecond(0);
                     }    
                     
                     //round up.
-                    else if(roundint >= half){ 
+                    else if(roundint >= h){ 
                         roundlong = new Long(s.getInterval() - roundint);
                         adjustmenttype = "Interval Round";
                         adjustedtimestamp = originalTimeStamp.plusMinutes(roundlong).withSecond(0);
@@ -291,14 +302,14 @@ public class Punch {
                 else {
                     if (roundint != 0) {
                         //round down.
-                        if(roundint < half) { 
+                        if(roundint < h) { 
                             roundlong = new Long(roundint);
                             adjustmenttype = "Interval Round";
                             adjustedtimestamp = originalTimeStamp.minusMinutes(roundlong).withSecond(0);
                         } 
                     
                         //round up.
-                        else if(roundint >= half){ 
+                        else if(roundint >= h){ 
                             roundlong = new Long(s.getInterval() - roundint);
                             adjustmenttype = "Interval Round";
                             adjustedtimestamp = originalTimeStamp.plusMinutes(roundlong).withSecond(0);
@@ -316,14 +327,14 @@ public class Punch {
                 
                 if (roundint != 0) {
                     //round down.
-                    if(roundint < half) { 
+                    if(roundint < h) { 
                         roundlong = new Long(roundint);
                         adjustmenttype = "Interval Round";
                         adjustedtimestamp = originalTimeStamp.minusMinutes(roundlong).withSecond(0);
                     }    
 
                     //round up.
-                    else if(roundint >= half){ 
+                    else if(roundint >= h){ 
                         roundlong = new Long(s.getInterval() - roundint);
                         adjustmenttype = "Interval Round";
                         adjustedtimestamp = originalTimeStamp.plusMinutes(roundlong).withSecond(0);
@@ -336,16 +347,24 @@ public class Punch {
                 }
             }
         }
-    
-       
-        
-        
-        
+ 
     }
   
-             public String printAdjusted(){
+              public String printOriginal(){
+            
+        StringBuilder s = new StringBuilder();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
+         
 
-        //String builder to format the adjusted type. 
+
+        s.append('#').append(badgeid.getId()).append(" ").append(punchTypeid);
+        s.append(": ").append((formatter.format(originalTimeStamp)).toUpperCase());
+        System.out.println(s.toString());
+
+        return s.toString();
+    }
+        public String printAdjusted(){
+
         StringBuilder s = new StringBuilder();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
 
@@ -358,21 +377,7 @@ public class Punch {
         
     }
 
-    public String printOriginal(){
-            
-        StringBuilder s = new StringBuilder();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
-            
-        s.append('#').append(badgeid.getId()).append(" ").append(punchTypeid);
-        s.append(": ").append((formatter.format(originalTimeStamp)).toUpperCase());
-        System.out.println(s.toString());
-
-        return s.toString();
-    } 
-
-
 }
-
 
 
 

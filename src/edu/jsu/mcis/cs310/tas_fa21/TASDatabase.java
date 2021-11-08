@@ -81,8 +81,7 @@ public class TASDatabase {
 
         }
         
-        //catch(Exception e){
-            //System.err.println("** getBadge: " + e.toString());
+
             catch(SQLException e){ System.out.println("Error in getBadge() " + e); 
         }
         
@@ -91,7 +90,6 @@ public class TASDatabase {
     }
     
     public Punch getPunch(int id) {
-       // DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MM-dd-yyyy HH:mm:ss");
         Punch punch = null;
         
         try {
@@ -114,9 +112,6 @@ public class TASDatabase {
                 LocalDateTime originalTimeStamp = resultset.getTimestamp("originaltimestamp").toLocalDateTime(); 
                 int punchtypeid = resultset.getInt("punchtypeid");
                 int punchid = resultset.getInt("id");
-                //PunchType punchtype = PunchType.values()[resultset.getInt("punchtypeid")];
-
-                //  Punch (int id, int terminalID, Badge badge, LocalDateTime originalTimeStamp, PunchType punchTypeID)
                 punch = new Punch(terminalid, getBadge(badgeid),punchtypeid,  originalTimeStamp, punchid);
                 
             }
@@ -215,12 +210,11 @@ public class TASDatabase {
         
         
     }
-    
 
     
     
     
-        public int insertPunch(Punch p){
+    public int insertPunch(Punch p){
 
         int results = 0;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -252,12 +246,10 @@ public class TASDatabase {
             }
         }
         catch(SQLException e){ System.err.println("insertPunch: " + e);}
-        //System.err.println("New Punch ID: " + results);
         
         return results;    
     }
-        
-        
+    
 
     public ArrayList<Punch> getDailyPunchList(Badge badge, LocalDate date) {
         
@@ -277,8 +269,7 @@ public class TASDatabase {
             
             
             if(hasResults){
-                
-                //output = new ArrayList<>();
+
                 
                 ResultSet resultsSet = pstSelect.getResultSet();
                 while(resultsSet.next()) {
@@ -311,13 +302,6 @@ public class TASDatabase {
     
         
     }
-
-
-
-
-        
-
-
 
 
 
