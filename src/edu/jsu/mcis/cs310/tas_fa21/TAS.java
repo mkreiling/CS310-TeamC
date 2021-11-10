@@ -76,4 +76,30 @@ public class TAS {
         return 0; 
     }
      
+    //Method added for feature 5, converts punch list to JSON string
+    public static String getPunchListAsJSON(ArrayList<Punch> dailypunchlist){
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("EEE" + " LL/dd/uuuu HH:mm:ss");
+        ArrayList<HashMap<String, String>> jsonData = new ArrayList<>();
+        
+        for(Punch punch: dailypunchlist){
+            
+            HashMap<String, String> punchData = new HashMap<>();
+            
+            punchData.put("id", String.valueOf(punch.getId()));
+            punchData.put("badgeid", String.valueOf(punch.getBadge().getId()));
+            punchData.put("terminalid", String.valueOf(punch.getTerminalid()));
+            punchData.put("punchtype", String.valueOf(punch.getPunchType()));
+            punchData.put("adjustmenttype", String.valueOf(punch.getAdjustmenttype()));
+            punchData.put("originaltimestamp", String.valueOf(punch.getOriginaltimestamp().format(format).toUpperCase()));
+            punchData.put("adjustedtimestamp", String.valueOf(punch.getAdjustedtimestamp().format(format).toUpperCase()));
+            jsonData.add(punchData);
+            
+        }
+        
+        String json = JSONValue.toJSONString(jsonData);
+
+        System.out.println(json);
+        return json;
+    }
+     
 }
