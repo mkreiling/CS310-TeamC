@@ -14,11 +14,8 @@ import java.sql.Connection;
 import java.time.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.time.format.DateTimeFormatter;
-import static java.time.temporal.ChronoUnit.MINUTES;
-import java.util.GregorianCalendar;
+
 
 public class TASDatabase {
 
