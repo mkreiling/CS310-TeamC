@@ -30,7 +30,7 @@ public class TASDatabase {
 
       /* Identifying the Server */
 
-      String server = ("jdbc:mysql://localhost/tas_fa21_v1?serverTimezone=America/Chicago");
+      String server = ("jdbc:mysql://localhost/tas_fa21_v1?serverTimezone=America/Chicago&useSSL=false");
       String username = "CS310C";
       String password = "CS488";
       System.out.println("Connecting to " + server + "...");
